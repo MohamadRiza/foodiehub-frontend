@@ -37,7 +37,12 @@ const formSchema = z.object({
         name: z.string().min(1, "Name is Requeired!"),
         price: z.coerce.number().min(1, "Price is Requeired!"),
     })),
-    imageFile: z.instanceof(File, { message: "Image is Requeired!" }),
+
+    imageUrl: z.string().optional(),//need to chack if it correct?
+    imageFile: z.instanceof(File, { message: "Image is Requeired!" }).optional(),
+}).refine((data) => data.imageUrl || data.imageFile, {
+    message: "Either image URL or image File Must be Provided",
+    path: ["imageFile"],
 })
 
 type ResturantFormData = z.infer<typeof formSchema>
@@ -94,7 +99,9 @@ const ManageResturantForm = ({onSave, isLoading, resturant}: Props) => {
             formData.append(`menueItems[${index}][price]`, (menueItem.price * 100).toString());
         })
 
+        if(FormDataJson.imageFile){
         formData.append(`imageFile`, FormDataJson.imageFile);
+    }
         onSave(formData);
   }
 
