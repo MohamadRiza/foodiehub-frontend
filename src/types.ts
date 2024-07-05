@@ -26,3 +26,12 @@ export type User = {
     imageUrl: string;
     lastUpdated: string;
   }
+
+  export type ResturantSearchResponse = {
+    data: Resturant[];
+    pagination: {
+      total: number;
+      page: number;
+      pages: number;
+    }
+  }
