@@ -3,15 +3,18 @@ import { useLocation } from "react-router-dom";
 import { Button } from "./ui/button";
 import LoadingButton from "./LoadingButton";
 import { Dialog, DialogContent, DialogTrigger } from "./ui/dialog";
-import UserProfileForm, { UserFormData } from "@/forms/user-profile-form/userprofileForm";
+import UserProfileForm, {
+  UserFormData,
+} from "@/forms/user-profile-form/userprofileForm";
 import { usergetMyUser } from "@/api/myUserApi";
 
 type Props = {
-    onChackout: (useFormData: UserFormData)=> void;
-    disabled: boolean;
-}
+  onChackout: (useFormData: UserFormData) => void;
+  disabled: boolean;
+  isLoading: boolean;
+};
 
-const CheckoutButton = ({ onChackout, disabled }: Props) => {
+const CheckoutButton = ({ onChackout, disabled, isLoading }: Props) => {
   const {
     isAuthenticated,
     isLoading: isAuthLoading,
@@ -37,25 +40,28 @@ const CheckoutButton = ({ onChackout, disabled }: Props) => {
       </Button>
     );
   }
-  if(isAuthLoading || !currentUser){
-    return (
-        <LoadingButton/>
-    )
+  if (isAuthLoading || !currentUser || isLoading) {
+    return <LoadingButton />;
   }
-  
-  return(
-    <Dialog>
-        <DialogTrigger asChild>
-            <Button disabled={disabled} className="bg-orange-500 flex-1">
-                Go to Checkout
-            </Button>
-        </DialogTrigger>
-        <DialogContent className="max-w-[425px] md:min-w-[700px] bg-gray-50">
-            <UserProfileForm currentUser={currentUser} onSave={onChackout} isLoading={isGetUserLoading} title="Confirm Delivery Details" buttonText="Continue to Payment"/>
-        </DialogContent>
-    </Dialog>
-  )
 
+  return (
+    <Dialog>
+      <DialogTrigger asChild>
+        <Button disabled={disabled} className="bg-orange-500 flex-1">
+          Go to Checkout
+        </Button>
+      </DialogTrigger>
+      <DialogContent className="max-w-[425px] md:min-w-[700px] bg-gray-50">
+        <UserProfileForm
+          currentUser={currentUser}
+          onSave={onChackout}
+          isLoading={isGetUserLoading}
+          title="Confirm Delivery Details"
+          buttonText="Continue to Payment"
+        />
+      </DialogContent>
+    </Dialog>
+  );
 };
 
 export default CheckoutButton;
